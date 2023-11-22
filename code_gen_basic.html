@@ -1,0 +1,396 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino DIY MIDI Controller Configuration</title>
+<link href="https://fonts.googleapis.com/css2?family=OCR-A&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=OCR-A:wght@300&amp;display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.26.0/themes/prism.min.css" rel="stylesheet">
+
+<style>
+    body {
+        background-color: #000;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 3rem;
+        font-size: 36px !important;
+        font-family: 'OCR-A', monospace;
+        color: purple !important;
+        font-weight: 300;
+        text-shadow: 0 0 10px rgba(128, 0, 128, 0.5) !important;
+    }
+
+    body,
+    h2,
+    label,
+    input,
+    select,
+    button,
+    pre,
+    code {
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 3rem;
+        font-size: 4rem;
+        color: #fff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    form {
+        max-width: 600px;
+        margin: 3rem auto;
+        padding: 2rem;
+        border: 2px solid #fff;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    label {
+        display: block;
+        font-size: 1.2rem;
+        color: #fff;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    select {
+        width: 100%;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+        display: inline-block;
+        margin-right: 0.5rem;
+    }
+
+    input[type="checkbox"]+label,
+    input[type="radio"]+label {
+        display: inline-block;
+        font-size: 1.2rem;
+        color: #fff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    button[type="submit"] {
+        display: block;
+        margin-top: 2rem;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+        background-color: #fff;
+        color: #000;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    button[type="submit"]:hover {
+        background-color: #000;
+        color: #fff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    pre {
+        max-width: 100% !important;
+        width: calc(100% - 5px) !important;
+        margin: 3rem auto;
+        padding: 2rem;
+        border: 2px solid #fff;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    code {
+        font-size: 1.2rem;
+        color: #fff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    .token.comment,
+    .token.prolog,
+    .token.doctype,
+    .token.cdata {
+        color: #999;
+    }
+
+    .token.punctuation {
+        color: #ccc;
+    }
+
+    .namespace {
+        opacity: .7;
+    }
+
+    .token.property,
+    .token.tag,
+    .token.constant,
+    .token.symbol,
+    .token.deleted {
+        color: #f77;
+    }
+
+    .token.boolean,
+    .token.number {
+        color: #77f;
+    }
+
+    .token.selector,
+    .token.attr-name,
+    .token.string,
+    .token.char,
+    .token.builtin,
+    .token.inserted {
+        color: #0f0;
+    }
+
+    .token.operator,
+    .token.entity,
+    .token.url,
+    .language-css .token.string,
+    .style .token.string {
+        color: #a67f59;
+        background: rgba(255, 255, 255, 0.1);
+        text-shadow: 0 0 10px rgba(166, 127, 89, 0.3);
+    }
+
+    .token.atrule,
+    .token.attr-value,
+    .token.keyword {
+        color: #f7b;
+    }
+
+    .token.function,
+    .token.class-name {
+        color: #0ff;
+    }
+
+    .token.regex,
+    .token.important,
+    .token.variable {
+        color: #f55;
+    }
+
+    .token.important,
+    .token.bold {
+        font-weight: bold;
+    }
+
+    .token.italic {
+        font-style: italic;
+    }
+
+    .token.entity {
+        cursor: help;
+    }
+
+    .code-wrapper {
+        display: flex;
+        justify-content: center;
+        position: relative;
+    }
+
+    #copy-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 5px;
+        background-color: #fff;
+        color: #000;
+        font-size: 1rem;
+        cursor: pointer;
+        z-index: 1;
+    }
+
+    #download-btn {
+        position: absolute;
+        top: 1rem;
+        right: 4rem;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 5px;
+        background-color: #fff;
+        color: #000;
+        font-size: 1rem;
+        cursor: pointer;
+        z-index: 1;
+    }
+    
+       #download-lib {
+        position: absolute;
+        top: 1rem;
+        right: 15rem;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 5px;
+        background-color: #fff;
+        color: #000;
+        font-size: 1rem;
+        cursor: pointer;
+        z-index: 1;
+    }
+    
+    .tutorial-link {
+        font-family: 'OCR-A', monospace;
+        font-size: 14px;
+        text-align: left;
+        color: #fff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        line-height: 1.5;
+    }
+</style>
+
+
+
+<h1>Arduino DIY MIDI Controller Configuration</h1>
+
+<p class="tutorial-link">
+    <br>For a complete tutorial visit: <a href="https://go.musiconerd.com/diy-midi-controller-workshop" target="_blank">https://go.musiconerd.com/diy-midi-controller-workshop</a>
+    <br>by Gustavo Silveira, a.k.a. the Nerd Musician.
+</p>
+
+<form id="arduino-config">
+    <label for="board-type">Choose a board:</label>
+    <select id="board-type" name="board-type">
+        <option value="ATMEGA328">Arduino Uno, Mega, Nano (ATmega328)</option>
+        <option value="ATMEGA32U4">Arduino Micro, Pro Micro, Leonardo (ATmega32U4)</option>
+        <option value="TEENSY">Teensy board</option>
+        <option value="DEBUG">Debug (Serial Monitor)</option>
+    </select>
+    <br><br>
+
+    <label>Are you using?</label><br>
+    <input type="checkbox" id="use-buttons" name="use-buttons"> <label for="use-buttons">Buttons</label><br>
+    <input type="checkbox" id="use-pots" name="use-pots"> <label for="use-pots">Potentiometers</label><br><br>
+
+    <div id="buttons-section" style="display: none;">
+        <label for="num-buttons">How many buttons are you using?</label>
+        <input type="number" id="num-buttons" name="num-buttons" min="0"><br><br>
+
+        <label for="button-pins">Which pins are you using for the buttons? (comma-separated)</label>
+        <input type="text" id="button-pins" name="button-pins"><br><br>
+    </div>
+
+    <div id="pots-section" style="display: none;">
+        <label for="num-pots">How many potentiometers are you using?</label>
+        <input type="number" id="num-pots" name="num-pots" min="0"><br><br>
+
+        <label for="pot-pins">Which pins are you using for the potentiometers? (comma-separated)</label>
+        <input type="text" id="pot-pins" name="pot-pins"><br><br>
+    </div>
+
+    <button type="submit">Submit</button>
+</form>
+
+<h2>Modified Code</h2>
+
+<div class="code-wrapper">
+
+    <button id="copy-btn" title="Copy to clipboard">Copy</button>
+
+    <button id="download-btn" title="Download Code" style="margin-right: 20px;"> Download Code</button>
+
+     <button id="download-lib" title="Download Lib" style="margin-right: 20;"> Download Libraries</button>
+
+    <pre><code id="file-content" class="language-arduino"></code></pre>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.26.0/prism.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.26.0/components/prism-c.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.26.0/components/prism-cpp.min.js"></script><script>
+    Prism.languages.arduino = Prism.languages.extend('cpp', {});
+    Prism.languages.insertBefore('arduino', 'keyword', {
+        'arduino-keyword': /\b(digitalRead|digitalWrite|analogRead|analogWrite|pinMode|delay|millis|micros|delayMicroseconds|map|random|randomSeed|Serial|begin|end|print|println|available|read|write|flush|setTimeout|SoftwareSerial)\b/,
+    });
+
+    document.getElementById('use-buttons').addEventListener('change', (event) => {
+        document.getElementById('buttons-section').style.display = event.target.checked ? 'block' : 'none';
+    });
+
+    document.getElementById('use-pots').addEventListener('change', (event) => {
+        document.getElementById('pots-section').style.display = event.target.checked ? 'block' : 'none';
+    });
+
+    document.getElementById('arduino-config').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const boardType = formData.get('board-type');
+        const useButtons = formData.get('use-buttons') === 'on';
+        const numButtons = formData.get('num-buttons') || '0';
+        const buttonPins = formData.get('button-pins') ? formData.get('button-pins').split(',').map(pin => pin.trim()) : [];
+        const usePots = formData.get('use-pots') === 'on';
+        const numPots = formData.get('num-pots') || '0';
+        const potPins = formData.get('pot-pins') ? formData.get('pot-pins').split(',').map(pin => pin.trim()) : [];
+
+        const response = await fetch('https://storage.googleapis.com/msgsndr/VWW8bj7SgwIOUgtvGEfH/media/655d237f2de3874dfbc74380.txt');
+        const data = await response.text();
+
+        let modifiedData = data.replace(/#define DEBUG/, `#define ${boardType}`);
+        let usingButtonsPattern = new RegExp("(#define USING_BUTTONS 1)(\\s+\\/\\/ comment if not using buttons)", "g");
+        let usingPotentiometersPattern = new RegExp("(#define USING_POTENTIOMETERS 1)(\\s+\\/\\/ comment if not using potentiometers)", "g");
+        modifiedData = modifiedData.replace(usingButtonsPattern, useButtons ? '$1$2' : '//$1$2').replace(usingPotentiometersPattern, usePots ? '$1$2' : '//$1$2');
+
+        if (useButtons) {
+            modifiedData = modifiedData.replace(/const int N_BUTTONS = .+;/, `const int N_BUTTONS = ${numButtons};`)
+                .replace(/const int BUTTON_ARDUINO_PIN\[N_BUTTONS\] = {.*};/, `const int BUTTON_ARDUINO_PIN[${numButtons}] = {${buttonPins.join(', ')}};`);
+        } else {
+            modifiedData = modifiedData.replace(/const int N_BUTTONS = .+;/, `const int N_BUTTONS = 0;`)
+                .replace(/const int BUTTON_ARDUINO_PIN\[N_BUTTONS\] = {.*};/, `const int BUTTON_ARDUINO_PIN[0] = {};`);
+        }
+
+        if (usePots) {
+            modifiedData = modifiedData.replace(/const int N_POTS = .+;/, `const int N_POTS = ${numPots};`)
+                .replace(/const int POT_ARDUINO_PIN\[N_POTS\] = {.*};/, `const int POT_ARDUINO_PIN[${numPots}] = {${potPins.join(', ')}};`);
+        } else {
+            modifiedData = modifiedData.replace(/const int N_POTS = .+;/, `const int N_POTS = 0;`)
+                .replace(/const int POT_ARDUINO_PIN\[N_POTS\] = {.*};/, `const int POT_ARDUINO_PIN[0] = {};`);
+        }
+
+        document.getElementById('file-content').textContent = modifiedData;
+        Prism.highlightElement(document.getElementById('file-content'));
+    });
+
+    function copyToClipboard(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+    }
+
+    document.getElementById('copy-btn').addEventListener('click', () => {
+        const codeText = document.getElementById('file-content').textContent;
+        copyToClipboard(codeText);
+        alert('Code copied to clipboard!');
+    });
+
+    // Function to download the code as a text file
+    function downloadCode() {
+        const codeText = document.getElementById('file-content').textContent;
+        const blob = new Blob([codeText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'DIY_MIDI_Controller.ino';
+        link.click();
+    }
+
+    document.getElementById('download-btn').addEventListener('click', downloadCode);
+</script>
